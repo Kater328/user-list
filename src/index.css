@@ -1,0 +1,90 @@
+:root {
+    --color-green: #3CB371;
+    --color-dark-green: #0b210e;
+    --color-red: #ed3737;
+    --color-light: #ffffff;
+    --color-light-blue: #effeff;
+}
+
+body {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1rem;
+    cursor: default;
+}
+
+.app {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+table {
+    text-align: left;
+    border-collapse: collapse;
+    border-radius: 0.5rem;
+    box-shadow: 0 0 0 10px var(--color-green);
+    color: #0b210e;
+    height: fit-content;
+}
+
+th {
+    text-align: center;
+    font-weight: bold;
+    padding: 0.5rem;
+}
+
+tbody tr:hover {
+    cursor: pointer;
+    background-color: #3cb37215;
+}
+
+td {
+    border: 0.2rem solid var(--color-green);
+    padding: 8px;
+    background: var(--color-light-green);
+}
+
+button {
+    width: 80px;
+    height: 30px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    background: var(--color-light);
+    cursor: pointer;
+}
+
+.positive_button:hover {
+    background: var(--color-green);
+    color: var(--color-light);
+}
+
+.negative_button:hover {
+    background: var(--color-red);
+    color: var(--color-light);
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-green);
+    padding: 2%;
+    justify-content: space-between;
+    height: fit-content;
+}
+
+input {
+    padding: 0 20px;
+    margin-bottom: 10px;
+    background: var(--color-light-blue);
+    line-height: 40px;
+    border-width: 0;
+    border-radius: 20px;
+    resize: none;
+}
+
+.buttons {
+    margin: 5% 0;
+    display: flex;
+    justify-content: space-between;
+}
