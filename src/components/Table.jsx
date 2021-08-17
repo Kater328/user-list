@@ -23,6 +23,17 @@ class Table extends React.PureComponent {
         )
     }
 
+    deleteUser = (id) => {
+        fetch("https://jsonplaceholder.typicode.com/users/" + id, {
+            method: "DELETE",
+        })
+        .then(
+            this.setState({
+                users: this.state.users.filter(item => item.id !== id)
+            })
+        )       
+    }
+
     render() {
         if (this.state.error) {
             return alert ("Error: " + this.state.error.message);
@@ -42,7 +53,8 @@ class Table extends React.PureComponent {
                         this.state.users.map(item => 
                             <TableLine 
                                 key={item.id} 
-                                item={item}/>
+                                item={item}
+                                deleteUser={this.deleteUser}/>
                         )
                     }
                 </tbody>

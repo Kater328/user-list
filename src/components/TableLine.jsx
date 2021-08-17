@@ -10,7 +10,11 @@ class TableLine extends React.PureComponent {
                 <td>{this.props.item.phone}</td>
                 <td>
                     <button className="positive_button">Edit</button>
-                    <button className="negative_button">Delete</button>
+                    <button 
+                        className="negative_button"
+                        onClick={() => this.props.deleteUser(this.props.item.id)}>
+                            Delete
+                    </button>
                 </td>
             </tr>
         )
