@@ -32,7 +32,11 @@ class Form extends React.PureComponent {
 
   saveChanges = (e) => {
     e.preventDefault();
-    this.props.saveChanges(this.state.name, this.state.email, this.state.phone);
+    if(this.props.currentUser.id) {
+      this.props.saveChanges(this.state.name, this.state.email, this.state.phone);
+    } else {
+      this.props.saveNewUser(this.state.name, this.state.email, this.state.phone);
+    }
     this.clearForm(e);
   }
 

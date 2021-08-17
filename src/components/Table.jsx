@@ -31,7 +31,8 @@ class Table extends React.PureComponent {
             this.setState({
                 users: this.state.users.filter(item => item.id !== id)
             })
-        )       
+        )
+        this.props.turnOffChanged();
     }
 
     updateUsers = () => {
@@ -51,11 +52,27 @@ class Table extends React.PureComponent {
         this.props.turnOffChanged();
     }
 
+    addUser = () => {
+        this.setState({
+            users: [
+              ...this.state.users,
+                {
+                    id: this.props.editingUser.id,
+                    name: this.props.editingUser.name,
+                    email: this.props.editingUser.email,
+                    phone: this.props.editingUser.phone
+                }
+            ]
+          });
+        this.props.turnOffChanged();
+    }
+
     render() {
         if (this.state.error) {
             return alert ("Error: " + this.state.error.message);
         }
         if (this.props.isChanged) this.updateUsers();
+        if (this.props.isNew) this.addUser();
         return(
             <table>
                 <thead>
