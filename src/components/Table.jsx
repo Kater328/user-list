@@ -34,10 +34,28 @@ class Table extends React.PureComponent {
         )       
     }
 
+    updateUsers = () => {
+        this.setState({
+            users: this.state.users.map(
+              item =>
+                item.id === this.props.editingUser.id ?
+                {...item, 
+                    name: this.props.editingUser.name,
+                    email: this.props.editingUser.email,
+                    phone: this.props.editingUser.phone
+                } :
+                item
+                )
+            }
+        );
+        this.props.turnOffChanged();
+    }
+
     render() {
         if (this.state.error) {
             return alert ("Error: " + this.state.error.message);
         }
+        if (this.props.isChanged) this.updateUsers();
         return(
             <table>
                 <thead>
@@ -54,7 +72,8 @@ class Table extends React.PureComponent {
                             <TableLine 
                                 key={item.id} 
                                 item={item}
-                                deleteUser={this.deleteUser}/>
+                                deleteUser={this.deleteUser}
+                                editUser={this.props.editUser}/>
                         )
                     }
                 </tbody>
