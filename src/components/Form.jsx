@@ -11,13 +11,22 @@ class Form extends React.PureComponent {
     }
   }
 
-  createNewState = () => {
-    this.setState({
-      name: this.props.currentUser.name,
-      email: this.props.currentUser.email,
-      phone: this.props.currentUser.phone
-    })
-    this.props.turnOffSelectedNew();
+  componentDidUpdate = (prevProps) => {
+    if(prevProps.currentUser.id !== this.props.currentUser.id) {
+      if (Number.isInteger(prevProps.currentUser.id)) {
+        this.setState({
+          name: "",
+          email: "",
+          phone: ""
+        });
+      } else {
+        this.setState({
+          name: this.props.currentUser.name,
+          email: this.props.currentUser.email,
+          phone: this.props.currentUser.phone
+        });
+      }
+    }
   }
 
   clearForm = (e) => {
@@ -27,23 +36,17 @@ class Form extends React.PureComponent {
       email: "",
       phone: ""
     });
-    
   }
 
   saveChanges = (e) => {
     e.preventDefault();
-    if(this.props.currentUser.id) {
-      this.props.saveChanges(this.state.name, this.state.email, this.state.phone);
-    } else {
-      this.props.saveNewUser(this.state.name, this.state.email, this.state.phone);
-    }
+    this.props.saveChanges(this.state.name, this.state.email, this.state.phone);
     this.clearForm(e);
   }
 
   render() {
     return(
         <form>
-          {this.props.isSelectedNew && this.createNewState()}
             <input 
               type="text" 
               placeholder="Name" 

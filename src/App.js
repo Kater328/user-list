@@ -1,93 +1,90 @@
 import React from 'react';
 import Table from './components/Table';
 import Form from './components/Form';
+import { loadUsersApi, deleteUserApi, saveNewUserApi, changeUserApi } from './api.js';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.count = 11;
     this.state = {
+      users: [],
       editingUser: {},
-      isSelectedNew: false,
-      isChanged: false,
-      isNew: false
+      error: null
     }
+  }
+
+  componentDidMount() {
+    loadUsersApi().then(response => response.json())
+    .then(
+      (apiUsers) => {
+        this.setState({ users: apiUsers });
+      },
+      (error) => {
+        this.setState({ error });
+      }
+    )
+  }
+
+  deleteUser = (id) => {
+    deleteUserApi().then(
+      this.setState({
+        users: this.state.users.filter(item => item.id !== id)
+      })
+    )
+  }
+
+  deleteCurrentUser = () => {
+    this.setState({
+      editingUser: {}
+    })
   }
 
   editUser = (user) => {
     this.setState({
-      editingUser: user,
-      isSelectedNew: true
-    });
-  }
-
-  turnOffSelectedNew = () => {
-    this.setState({
-      isSelectedNew: false
-    });
-  }
-
-  turnOffChanged = () => {
-    this.setState({
-      editingUser: {},
-      isChanged: false,
-      isNew: false
+      editingUser: user
     });
   }
 
   saveChanges = (name, email, phone) => {
-    fetch("https://jsonplaceholder.typicode.com/users/" + this.state.editingUser.id, {
-      method: "PUT",
-      body: JSON.stringify({
-        name,
-        email,
-        phone,
-        id: this.state.editingUser.id,
-      }),
-    })
-    .then(
-      this.setState({
-        editingUser: {name, email, phone, id: this.state.editingUser.id},
-        isChanged: true
-      })
-    )  
-  }
-
-  saveNewUser = (name, email, phone) => {
-    fetch("https://jsonplaceholder.typicode.com/users", {
-      method: "POST",
-      body: JSON.stringify({
-        name,
-        email,
-        phone,
-        id: this.count,
-      }),
-    })
-    .then(
-      this.setState({
-        editingUser: {name, email, phone, id: this.count},
-        isNew: true
-      })
-    );
-    this.count++;
+    if (this.state.users.some (element => (element.id === this.state.editingUser.id))) {
+      changeUserApi(this.state.editingUser.id, name, email, phone)
+      .then(
+        this.setState({
+          users: this.state.users.map(
+            item =>
+              item.id === this.state.editingUser.id ?
+                {...item, name, email, phone} : item
+              ),
+            editingUser: {}
+          })
+      );
+    } else {
+      saveNewUserApi(this.count, name, email, phone)
+      .then(
+        this.setState({
+          users: [
+            ...this.state.users, {id: this.count, name, email, phone}
+          ]
+        })
+      );
+      this.count++;
+    }
   }
 
   render() {
     return(
       <div className="app">
         <Table 
+          users={this.state.users}
           editUser={this.editUser}
-          editingUser={this.state.editingUser}
-          isChanged={this.state.isChanged}
-          isNew={this.state.isNew}
-          turnOffChanged={this.turnOffChanged}/>
+          error={this.state.error}
+          deleteUser={this.deleteUser}/>
         <Form 
           currentUser={this.state.editingUser}
-          isSelectedNew={this.state.isSelectedNew}
           turnOffSelectedNew={this.turnOffSelectedNew}
-          deleteCurrentUser={this.turnOffChanged}
-          saveChanges={this.saveChanges}
-          saveNewUser={this.saveNewUser}/>
+          deleteCurrentUser={this.deleteCurrentUser}
+          saveChanges={this.saveChanges}/>
       </div>
     )
   }
